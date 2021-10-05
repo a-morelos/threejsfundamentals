@@ -1,0 +1,42 @@
+
+{
+  language: 'Español',
+  langCode: 'es',   // if not specified will use folder
+  defaultExampleCaption: "Da clic aquí para abrir en una nueva ventana",
+  title: 'fundamentos de three.js',
+  description: 'Aprende Three.js',
+  link: 'http://threejsfundamentals.org/',
+  commentSectionHeader: `
+    <div>
+       <a href="https://github.com/gfxfundamentals/threejsfundamentals/discussions">¿Preguntas?</a>
+       <a href="https://github.com/gfxfundamentals/threejsfundamentals/issues/new?assignees=&labels=suggested+topic&template=suggest-topic.md&title=%5BSUGGESTION%5D">Sugerencias</a>
+       <a href="https://github.com/gfxfundamentals/threejsfundamentals/issues/new?assignees=&labels=&template=request.md&title=">Peticiones</a>?
+       <a href="https://github.com/gfxfundamentals/threejsfundamentals/issues/new?assignees=&labels=bug+%2F+issue&template=bug-issue-report.md&title=">Problemas</a>?
+       <a href="https://github.com/gfxfundamentals/threejsfundamentals/issues/new?assignees=&labels=bug+%2F+issue&template=bug-issue-report.md&title=">Bugs</a>?
+    </div>
+    <div class="lesson-comment-notes">
+       Usa <b>&lt;pre&gt;&lt;code&gt;</b>tu código aquí<b>&lt;/code&gt;&lt;/pre&gt;</b> para bloques de código
+    </div>
+  `,
+  missing: `
+     Perdón, este artículo aún no ha sido traducido.
+     [Traducciones bienvenidas](https://github.com/gfxfundamentals/threejsfundamentals)! 😄
+     
+     [Por ahora sólo esta el original en inglés]({{{origLink}}}).
+  `,
+  contribTemplate: 'Thank you <a href="${html_url}"><img src="${avatar_url}"> ${login}</a><br>for <a href="https://github.com/${owner}/${repo}/commits?author=${login}">${contributions} contributions</a>',
+  translations: {
+    badTranslation: 'Perdón, La traducción de esta área esta desactualizada. <a href="{{link}}">Considera ayudar a corregirlo</a>.',
+    updateNeeded: 'La traducción de esta área esta desactualizada.  <a href="{{link}}">Considera ayudar a corregirlo</a>.',
+  },
+  toc: 'Tabla de Contenidos',
+  categoryMapping: {
+    'basics': 'Basicos',
+    'solutions': 'Soluciones',
+    'webvr': 'WebVR',
+    'optimization': 'Optimización',
+    'tips': 'Tips',
+    'fundamentals': 'Fundamentos',
+    'reference': 'Referencias',
+  },
+}
