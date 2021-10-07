@@ -40,7 +40,7 @@ Algunas cosas que observar sobre el diagrama de arriba.
   de renderizar (dibujar) la porción de la escena 3D que está adentro del *frustum*
   de la cámara como una imagen 2D hacia un canvas.
 
-* Hay unaa [escenografía](threejs-scenegraph.html) que es una estructura de árbol
+* Hay una [escenografía](threejs-scenegraph.html) que es una estructura de árbol
   que consta de varios objetos como `Scene`, múltiples objetos `Mesh` (malla), 
   objetos `Light` (luces) y objetos `Group`, `Object3D`, and `Camera. Un objeto
   `Scene` define la raíz de la escenografía y contiene propiedades como el color de
@@ -50,46 +50,45 @@ Algunas cosas que observar sobre el diagrama de arriba.
   los hijos de este último, así que al mover y orientar el objeto auto de inmediato se
   moverían sus llantas. Puedes leer más sobre esto en el [artículo sobre escenografías](threejs-scenegraph.html).
 
-  Note in the diagram `Camera` is half in half out of the scenegraph. This is to
-  represent that in three.js, unlike the other objects, a `Camera` does not have
-  to be in the scenegraph to function. Just like other objects, a `Camera`, as a
-  child of some other object, will move and orient relative to its parent object.
-  There is an example of putting multiple `Camera` objects in a scenegraph at
-  the end of [the article on scenegraphs](threejs-scenegraph.html).
+  Nota que en el diagrama `Camera` está mitad adentro, mitad afuera de la escenografía.
+  Esto es para representar que en three.js a diferencia de otros objetos, una `Camera`
+  no necesita estar en la escenografía para funcionar. Como otros objetos, una `Camera`
+  como hijo de algún otro objeto, se moverá y orientará de forma relativa a su objeto padre.
+  Hay un ejemplo de colocar múltiples objetos `Camera` en una escenografía al final del
+  [artículo de escenografías](threejs-scenegraph.html).
 
-* `Mesh` objects represent drawing a specific `Geometry` with a specific
-   `Material`. Both `Material` objects and `Geometry` objects can be used by
-   multiple `Mesh` objects. For example to draw two blue cubes in different
-   locations we could need two `Mesh` objects to represent the position and
-   orientation of each cube. We would only need one `Geometry` to hold the vertex
-   data for a cube and we would only need one `Material` to specify the color
-   blue. Both `Mesh` objects could reference the same `Geometry` object and the
-   same `Material` object.
+*  Los objetos `Mesh` representan el dibujo de un objeto `Geometry` con un `Material`.
+   Tantos los objetos `Material` como los `Geometry` pueden usarse en múltiples objetos
+   `Mesh`. Por ejemplo, para dibujar dos cubos azules en diferentes ubicaciones podríamos
+   necesitar dos objetos `Mesh` para representar la posición y orientación de cada cubo.
+   Podríamos necesitar un `Geometry` para guardar los datos del vértice para un cubo y 
+   podríamos usar un `Material` para especifícar el colo azul. Ambos objetos `Mesh` pueden
+   hacer referencia al mismo objeto `Geometry` y al mismo objeto `Material`.
 
-* `Geometry` objects represent the vertex data of some piece of geometry like
-   a sphere, cube, plane, dog, cat, human, tree, building, etc...
-   Three.js provides many kinds of built in
-   [geometry primitives](threejs-primitives.html). You can also
-   [create custom geometry](threejs-custom-buffergeometry.html) as well as
-   [load geometry from files](threejs-load-obj.html).
+*  Los objetos `Geometry` representan los datos del vértice de algunas piezas de geomtería como
+   esferas, cubos, planos, perros, gatos, humanos, árboles, edificios, etc...
+   Three.js incluye algunas en
+   [geometría primitiva](threejs-primitives.html). También puedes revisar
+   [crear geometría personalizada](threejs-custom-buffergeometry.html) y también 
+   [cargar geometría desde archivos](threejs-load-obj.html).
 
-* `Material` objects represent
-  [the surface properties used to draw geometry](threejs-materials.html)
-  including things like the color to use and how shiny it is. A `Material` can also
-  reference one or more `Texture` objects which can be used, for example, 
-  to wrap an image onto the surface of a geometry.
+* Los objetos `Material` representan
+  [las propiedades de la superficie que se usan para dibujar geometría](threejs-materials.html)
+  incluyen propiedades como el color para usar y el brillo en él. Un `Material` también
+  puede referenciar una o más objetos `Texture` que pueden usarse, por ejemplo, para
+  colocar una imagen en la superficie de una geometría.
 
-* `Texture` objects generally represent images either [loaded from image files](threejs-textures.html),
-  [generated from a canvas](threejs-canvas-textures.html) or [rendered from another scene](threejs-rendertargets.html).
+* Los objetos `Texture` generalmente representan imágenes que puede [cargarse desde un archivo](threejs-textures.html),
+  [generados desde un canvas](threejs-canvas-textures.html) o [renderizado desde otra escena](threejs-rendertargets.html).
 
-* `Light` objects represent [different kinds of lights](threejs-lights.html).
+* Los objetos `Light` representan [diferentes tipos de luces](threejs-lights.html).
 
-Given all of that we're going to make the smallest *"Hello Cube"* setup
-that looks like this
+Sabiendo todo lo anterior, el *setup* para nuestro pequeño *«Hola cubo»*
+se vería así:
 
 <div class="threejs_center"><img src="resources/images/threejs-1cube-no-light-scene.svg" style="width: 500px;"></div>
 
-First let's load three.js
+Primero cargamos three.js
 
 ```html
 <script type="module">
@@ -97,12 +96,12 @@ import * as THREE from './resources/threejs/r132/build/three.module.js';
 </script>
 ```
 
-It's important you put `type="module"` in the script tag. This enables
-us to use the `import` keyword to load three.js. There are other ways
-to load three.js but as of r106 using modules is the recommended way.
-Modules have the advantage that they can easily import other modules
-they need. That saves us from having to manually load extra scripts
-they are dependent on.
+Es importante que agreges `type="module"` en el tag script. Esto nos
+permite usar la palabra `import` para cargar three.js. Hay otras formas
+para cargar three.js pero este es el método recomendado por r106.
+Los módulos tienen la ventaja de que son fáciles de importar desde otros módulos
+que los necesiten. Esto nos ahorra el tener que cargar los scripts extra
+que necesiten de forma manual.
 
 Next we need is a `<canvas>` tag so...
 
