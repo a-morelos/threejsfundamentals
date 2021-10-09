@@ -343,42 +343,43 @@ Y aquí está:
 
 {{{example url="../threejs-fundamentals-3-cubes.html" }}}
 
+Sí lo comparas con el diagrama anterios puedes observar que
+cumple con lo que esperábamos. Con los cubos en X = -2 y x= +2
+están parcialmente fuera del frustrum. También paracen un poco
+encerrados dado que nuestro fov sobre el canvas es algo estrecho.
 
-If you compare it to the top down diagram above you can see
-it matches our expectations. With cubes at X = -2 and X = +2
-they are partially outside our frustum. They are also
-somewhat exaggeratedly warped since the field of view
-across the canvas is so extreme.
-Our program now has this structure
+Ahora nuestro programa tiene esta estructura.
 <div class="threejs_center"><img src="resources/images/threejs-3cubes-scene.svg" style="width: 610px;"></div>
-As you can see we have 3 `Mesh` objects each referencing the same `BoxGeometry`.
-Each `Mesh` references a unique `MeshPhongMaterial` so that each cube can have
-a different color.
-I hope this short intro helps to get things started. [Next up we'll cover
-making our code responsive so it is adaptable to multiple situations](threejs-responsive.html).
+
+Como puedes ver tenemos tres objetos `Mesh` cada uno referenciando al mismo `BoxGeometry`.
+Cada `Mesh` hace referencia a un único `MeshPhongMaterial` para que cada cubo tenga
+colores distintos.
+Espero que esta corta introducción te ayude para comenzar. [A continuación
+haremos nuestro código responsivo para que pueda adaptarse a distintas situaciones](threejs-responsive.html).
 <div id="es6" class="threejs_bottombar">
-<h3>es6 modules, three.js, and folder structure</h3>
-<p>As of version r106 the preferred way to use three.js is via <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import">es6 modules</a>.</p>
-<p>
-es6 modules can be loaded via the <code>import</code> keyword in a script
-or inline via a <code>&lt;script type="module"&gt;</code> tag. Here's an example of
-both
-</p>
+  <h3>módulos es6, three.js y la estructura de directorios</h3>
+  <p>Al igual que la versión r106 el modo preferido para usar three.js es mediante <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import">módulos es6</a>.</p>
+
+  <p>Los módulos es6 pueden ser cargados a través de la palabra reservada <code>import</code> en un script
+    o una etiqueta <code>&lt;script type="module"&gt;</code>. Aquí hay un ejemplo de ambos.
+  </p>
+
 <pre class=prettyprint>
 &lt;script type="module"&gt;
 import * as THREE from './resources/threejs/r132/build/three.module.js';
 ...
 &lt;/script&gt;
 </pre>
-<p>
-Paths must be absolute or relative. Relative paths always start with <code>./</code> or <code>../</code>
-which is different than other tags like <code>&lt;img&gt;</code> and <code>&lt;a&gt;</code>.
-</p>
-<p>
-References to the same script will only be loaded once as long as their absolute paths
-are exactly the same. For three.js this means it's required that you put all the examples
-libraries in the correct folder structure
-</p>
+
+   <p>
+     Las rutas pueden ser absolutas o relativas. Las rutas relativas siempre deben comenzar con <code>./</code> o <code>../</code>,
+     lo que es diferente de otras etiquetas como <code>&lt;img&gt;</code> y <code>&lt;a&gt;</code>.
+  </p>
+  <p>
+    Las referencias al mismo script sólo serán cargadas una vez ya que sus rutas absolutas son
+    simpre las mismas. Para three.js esto significa que necesita que pongas todas las bibliotecas
+    de ejemplo en la estructura correcta de directorios.
+  </p>
 <pre class="dos">
 someFolder
  |
@@ -403,37 +404,42 @@ someFolder
      |
      ...
 </pre>
-<p>
-The reason this folder structure is required is because the scripts in the
-examples like <a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/controls/OrbitControls.js"><code>OrbitControls.js</code></a>
-have hard coded relative paths like
-</p>
+  <p>
+    El motivo de esta estructura es porque los scripts en los ejemplos como 
+    <a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/controls/OrbitControls.js"><code>OrbitControls.js</code></a>
+    son complicadas de usar con rutas relativas como
+  </p>
+  
 <pre class="prettyprint">
 import * as THREE from '../../../build/three.module.js';
 </pre>
-<p>
-Using the same structure assures then when you import both three and one of the example
-libraries they'll both reference the same <code>three.module.js</code> file.
-</p>
+  <p>
+    Usando la misma estructura se asegura que cuando importes tanto three como una de las
+    bibliotecas de ejemplos, ambas usen el mismo archivo <code>three.module.js</code>.
+  </p>
+  
 <pre class="prettyprint">
 import * as THREE from './someFolder/build/three.module.js';
 import {OrbitControls} from './someFolder/examples/jsm/controls/OrbitControls.js';
 </pre>
-<p>This includes when using a CDN. Be sure your path to <code>three.module.js</code> ends with
-<code>/build/three.modules.js</code>. For example</p>
+  <p>
+    Esto también aplica cuando se usa un CDN. Asegúrate de que tu ruta a <code>three.module.js</code>
+    termine con <code>/build/three.modules.js</code>. Por ejemplo:
+  </p>
 <pre class="prettyprint">
 import * as THREE from 'https://unpkg.com/three@0.108.0<b>/build/three.module.js</b>';
 import {OrbitControls} from 'https://unpkg.com/three@0.108.0/examples/jsm/controls/OrbitControls.js';
 </pre>
-<p>If you'd prefer the old <code>&lt;script src="path/to/three.js"&gt;&lt;/script&gt;</code> style
-you can check out <a href="https://r105.threejsfundamentals.org">an older version of this site</a>.
-Three.js has a policy of not worrying about backward compatibility. They expect you to use a specific
-version, as in you're expected to download the code and put it in your project. When upgrading to a newer version
-you can read the <a href="https://github.com/mrdoob/three.js/wiki/Migration-Guide">migration guide</a> to
-see what you need to change. It would be too much work to maintain both an es6 module and a class script
-version of this site so going forward this site will only show es6 module style. As stated elsewhere,
-to support legacy browsers look into a <a href="https://babeljs.io">transpiler</a>.</p>
-</div>
+  <p>
+    Si prefieres el antiguo estilo de <code>&lt;script src="path/to/three.js"&gt;&lt;/script&gt;</code>
+    puedes revisar <a href="https://r105.threejsfundamentals.org">una versión vieja de este sitio</a>.
+    Three.js tiene la política de no preocuparse sobre retrocompatibilidad. Se espera que uses una versión
+    en específico de la misma forma que descargas el código y lo introduces en tu proyecto. Cuando actualizas
+    a una nueva versión puedes leer la <a href="https://github.com/mrdoob/three.js/wiki/Migration-Guide">guía de migración</a>
+    para ver que cambios necesitas hacer. Podría resultar en mucho trabajo mantener tanto el módulo es6 como el script
+    de este sitio, así que de aquí en adelante solo mostraremos el estilo de módulos de es6. Como ya se dijo antes,
+    si necesitas soporte para navegadores obsoletos deberías considerar usar un <a href="https://babeljs.io">transpilador</a>.
+  </p>
 <!-- needed in English only to prevent warning from outdated translations -->
 <a href="threejs-geometry.html"></a>
 <a href="Geometry"></a>
