@@ -60,26 +60,25 @@ He aquí el resultado.
 
 {{{example url="../threejs-responsive-no-resize.html" }}}
 
-You can see the canvas is now filling the page but there are 2
-problems. One our cubes are stretched. They are not cubes they
-are more like boxes. Too tall or too wide. Open the
-example in its own window and resize it. You'll see how
-the cubes get stretched wide and tall.
+Puedes ver como el canvas ahora ocupa la página, pero hay
+2 problemas. Uno de nuestro cubos es algo estrecho. No son cubos,
+son más bien cajas. Muy altas o muy anchas. Abre el ejemplo en su
+propia ventana y cambia el tamaño. Verás como los cubos se estrechan
+del alto o el ancho.
 
 <img src="resources/images/resize-incorrect-aspect.png" width="407" class="threejs_center nobg">
 
-The second problem is they look low resolution or blocky and
-blurry. Stretch the window really large and you'll really see
-the issue.
+El segundo problema es como se ven como en bloques o difumindado.
+Estira la ventana y verás el problema.
 
 <img src="resources/images/resize-low-res.png" class="threejs_center nobg">
 
-Let's fix the stretchy problem first. To do that we need
-to set the aspect of the camera to the aspect of the canvas's
-display size. We can do that by looking at the canvas's
-`clientWidth` and `clientHeight` properties.
+Vamos a arreglar este problema. Para esto necesitamos establecer
+el aspecto de la cámara al aspecto del tamaño del display del canvas.
+Podemos hacerlo mediante las propiedades clientWidth` y `clientHeight`
+del canvas.
 
-We'll update our render loop like this
+Modificamos nuestro loop render de la siguiente manera:
 
 ```js
 function render(time) {
@@ -89,6 +88,7 @@ function render(time) {
 +  camera.updateProjectionMatrix();
   ...
 ```
+
 Now the cubes should stop being distorted.
 {{{example url="../threejs-responsive-update-camera.html" }}}
 Open the example in a separate window and resize the window
