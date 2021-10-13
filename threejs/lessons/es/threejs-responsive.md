@@ -16,7 +16,7 @@ con controles a la izquierda, derecha, arriba o abajo es algo que deberíamos
 considerar. Un diagrama dinámico en tiempo real en medio de un documento es
 otro ejemplo.
 
-El último ejemplo que usamos fue un canvas plano sin CSS ni tamaño.
+El último ejemplo que usamos fue un canvas plano sin CSS ni tamaño definido.
 
 ```html
 <canvas id="c"></canvas>
@@ -89,28 +89,36 @@ function render(time) {
   ...
 ```
 
-Now the cubes should stop being distorted.
+Ahora los cubos deberían dejar de verse distorsionados.
+
 {{{example url="../threejs-responsive-update-camera.html" }}}
-Open the example in a separate window and resize the window
-and you should see the cubes are no longer stretched tall or wide.
-They stay the correct aspect regardless of window size.
+
+Abre el ejemplo en una ventana separada y reescala la ventana
+y deberías ver que los cubos ya no están estrechos del alto o el ancho.
+
+Deberían conservar el aspecto correcto a pesar del tamaño de la ventana.
+
 <img src="resources/images/resize-correct-aspect.png" width="407" class="threejs_center nobg">
-Now let's fix the blockiness.
-Canvas elements have 2 sizes. One size is the size the canvas is displayed
-on the page. That's what we set with CSS. The other size is the
-number of pixels in the canvas itself. This is no different than an image.
-For example we might have a 128x64 pixel image and using
-CSS we might display as 400x200 pixels.
+
+Ahora corrigamos el aspecto de bloques.
+
+Los elementos canvas tienen 2 tamaños. Uno es el tamaño de canvas que se
+muestra en la pantalla. Ese se establece en el CSS. El otro es el numero de
+pixeles en el canvas mismo. Esto no es diferente a una imagen. Por ejemplo
+podríamos tener una imagen de 128x64 pixeles y usando CSS podríamos mostrarla
+como una de 400x200 pixeles.
+
 ```html
 <img src="some128x64image.jpg" style="width:400px; height:200px">
 ```
-A canvas's internal size, its resolution, is often called its drawingbuffer size.
-In three.js we can set the canvas's drawingbuffer size by calling `renderer.setSize`.
-What size should we pick? The most obvious answer is "the same size the canvas is displayed".
-Again, to do that we can look at the canvas's `clientWidth` and `clientHeight`
-properties.
-Let's write a function that checks if the renderer's canvas is not
-already the size it is being displayed as and if so set its size.
+
+El tamaño interno del canvas así como su resolución es a menudo conocido como el tamaño del buffer de dibujo (*drawingbuffer size*). En three.js podemos establecerlo mediante la función `renderer.setSize`.
+¿Qué tamaño deberíamos escoger? La respuesta obvia es «el mismo tamaño del canvas que mostramos».
+De nuevo, para definir el tamaño vemos las propiedades `clientWidth` y `clientHeight`.
+
+Vamos a escribir una función que revise si el canvas del renderer no posee
+el tamaño del display, si no lo está, lo establece.
+
 ```js
 function resizeRendererToDisplaySize(renderer) {
   const canvas = renderer.domElement;
@@ -123,18 +131,23 @@ function resizeRendererToDisplaySize(renderer) {
   return needResize;
 }
 ```
-Notice we check if the canvas actually needs to be resized. Resizing the canvas
-is an interesting part of the canvas spec and it's best not to set the same
-size if it's already the size we want.
-Once we know if we need to resize or not we then call `renderer.setSize` and
-pass in the new width and height. It's important to pass `false` at the end.
-`render.setSize` by default sets the canvas's CSS size but doing so is not
-what we want. We want the browser to continue to work how it does for all other
-elements which is to use CSS to determine the display size of the element. We don't
-want canvases used by three to be different than other elements.
-Note that our function returns true if the canvas was resized. We can use
-this to check if there are other things we should update. Let's modify
-our render loop to use the new function
+
+Nota que revisamos si el canvas en realidad necesita cambiarse de tamaño.
+Reescalar el canvas es una parte interesante de la especificación del canvas
+y es mejor no establecer el tamaño que deseamos si ya lo posee.
+
+Una vez que sabemos si tenemos el tamaño que necesitamos o no, llamamos a
+`renderer.setSize` y pasamos como argumentos los nuevo valores de ancho y
+alto. Es importante pasar `false` al final. Por defecto `render.setSize` 
+establece el tamaño del CSS del canvas, pero no necesitamos eso. Queremos que
+el navegador continue funcionaando con los demás elementos, que es lo que usa
+CSS para determinar el tamaño del display del elemento. No queremos canvas
+usados tres veces más que otros elementos.
+
+Nota que nuestra función regresa `true` si el tamaño del canvas fue modificado.
+Podemos usar esto para revisar si hay otras cosas que podríamos actualizar.
+Vamos a modificar nuestro ciclo render para usar la nueva función.
+
 ```js
 function render(time) {
   time *= 0.001;
@@ -145,57 +158,78 @@ function render(time) {
 +  }
   ...
 ```
-Since the aspect is only going to change if the canvas's display size
-changed we only set the camera's aspect if `resizeRendererToDisplaySize`
-returns `true`.
+
+Ya que el aspecto sólo va a cambiar si cambia el tamaño del display,
+podemos establecer el aspecto de la cámara si `resizeRendererToDisplaySize`
+regresa `true`.
+
 {{{example url="../threejs-responsive.html" }}}
-It should now render with a resolution that matches the display
-size of the canvas.
-To make the point about letting CSS handle the resizing let's take
-our code and put it in a [separate `.js` file](../threejs-responsive.js).
-Here then are a few more examples where we let CSS choose the size and notice we had
-to change zero code for them to work.
-Let's put our cubes in the middle of a paragraph of text.
+
+Ahora podríamos renderizar con una resolución igual al tamaño del display
+del canvas.
+
+Para entender sobre como CSS maneja el cambio de tamaño vamos a poner
+nuestro código en un [archivo `.js` separado](../threejs-responsive.js).
+Aquí hay unos cuantos ejemplos más donde dejamos al CSS escoger el tamaño y 
+notamos que no tenemos que cambiar el código para que funcione.
+
+Vamos a poner nuestros cubos en medio de un párrafo de texto.
+
 {{{example url="../threejs-responsive-paragraph.html" startPane="html" }}}
-and here's our same code used in an editor style layout
-where the control area on the right can be resized.
+
+hacemos uso del mismo código usado en un editor donde el tamaño del área
+de control puede cambiar de tamaño.
+
 {{{example url="../threejs-responsive-editor.html" startPane="html" }}}
-The important part to notice is no code changed. Only our HTML and CSS
-changed.
-## Handling HD-DPI displays
-HD-DPI stands for high-density dot per inch displays.
-That's most Macs nowadays and many Windows machines
-as well as pretty much all smartphones.
-The way this works in the browser is they use
-CSS pixels to set the sizes which are supposed to be the same
-regardless of how high res the display is. The browser
-will just render text with more detail but the
-same physical size.
-There are various ways to handle HD-DPI with three.js.
-The first one is just not to do anything special. This
-is arguably the most common. Rendering 3D graphics
-takes a lot of GPU processing power. Mobile GPUs have
-less power than desktops, at least as of 2018, and yet
-mobile phones often have very high resolution displays.
-The current top of the line phones have an HD-DPI ratio
-of 3x meaning for every one pixel from a non-HD-DPI display
-those phones have 9 pixels. That means they have to do 9x
-the rendering.
-Computing 9x the pixels is a lot of work so if we just
-leave the code as it is we'll compute 1x the pixels and the
-browser will just draw it at 3x the size (3x by 3x = 9x pixels).
-For any heavy three.js app that's probably what you want
-otherwise you're likely to get a slow framerate.
-That said if you actually do want to render at the resolution
-of the device there are a couple of ways to do this in three.js.
-One is to tell three.js a resolution multiplier using `renderer.setPixelRatio`.
-You ask the browser what the multiplier is from CSS pixels to device pixels
-and pass that to three.js
+
+Es importante resaltar que no hay cambios de código. Sólo cambian nuestro HTML y el CSS.
+
+## Usando displays HD-DPI
+
+HD-DPI es el acrónimo para *display de alta densidad de
+puntos por pulgada*. La mayoría de Macs actualmente lo
+incorporan y muchos equipos con Windows también, así
+como varios smartphones.
+
+La manera en que esto funciona en el navegador es usando los 
+pixeles de CSS para establecer los tamaños que deben usarse
+acorde al de la resolución del display. El navegador sólo renderizará
+el texto con más detalle pero con el mismo tamaño físico.
+
+
+Hay varias manera para manejar el HD-DPI con three.js.
+
+La primera no es algo muy particular, de hecho suele ser común. Renderizar
+gráficos 3D utiliza mucho poder de procesamiento en la GPU. Los GPU's de
+móviles son menos poderosos que los de escritorio, al menos hasta 2018 varios
+modelos de teléfonos cuentan con displays de alta resolución.
+Los teléfonos de gama alta tiene un ratio de HD-DPI de 3x, esto significa que
+para cada pixel de un display sin HD-DPI, estos teléfonos tienen 9 pixeles, lo
+que implica que el proceso de renderizado aumenta 9x.
+
+Calcular los pixeles 9x es mucho trabajo si dejamos el
+código como esta dado que calcularemos los pixeles a 1x y el
+navegador los dibujará a 3x su tamaño (ya que 3x por 3x = 9x de pixeles).
+
+Para una app de three.js pesada probablemente sea útil, ya que
+de otra forma obtendrías un framerate muy lento.
+
+Se ha dicho que si prefieres renderizar a la resolución del dispositivo
+hay un par de formas de hacerlo en three.js.
+
+Una es darle a three.js un multiplicador de resoluciones usando
+`renderer.setPixelRatio`. Puedes decirle al navegador que el multiplicador
+es de los pixeles de CSS a los pixeles del dispositivo y pasar estos últimos
+a three.js.
+
      renderer.setPixelRatio(window.devicePixelRatio);
-After that any calls to `renderer.setSize` will magically
-use the size you request multiplied by whatever pixel ratio
-you passed in. **This is strongly NOT RECOMMENDED**. See below
-The other way is to do it yourself when you resize the canvas.
+
+Después de cualquier llamada a `renderer.setSize`, se ajustará
+el tamaño de hayas solicitado multiplicado por el ratio de pixeles
+que hayas pasado. **Esto NO ESTÁ RECOMENDADO**. Ve abajo.
+
+La otra forma es hacerlo por tu cuenta cuando cambias el tamaño del canvas.
+
 ```js
     function resizeRendererToDisplaySize(renderer) {
       const canvas = renderer.domElement;
@@ -209,20 +243,25 @@ The other way is to do it yourself when you resize the canvas.
       return needResize;
     }
 ```
-This second way is objectively better. Why? Because it means I get what I ask for.
-There are many cases when using three.js where we need to know the actual
-size of the canvas's drawingBuffer. For example when making a post processing filter,
-or if we are making a shader that accesses `gl_FragCoord`, if we are making
-a screenshot, or reading pixels for GPU picking, for drawing into a 2D canvas,
-etc... There many many cases where if we use `setPixelRatio` then our actual size will be different
-than the size we requested and we'll have to guess when to use the size
-we asked for and when to use the size three.js is actually using.
-By doing it ourselves we always know the size being used is the size we requested.
-There is no special case where magic is happening behind the scenes.
-Here's an example using the code above.
+
+Esta es una mejor solución cuando se mira de forma objetiva. ¿Por qué?
+Porque significa que se obtiene lo que se necesita.
+Hay muchos casos cuando se usa three.js donde necesitamos conocer el tamaño del drawingBuffer del canvas. Por ejemplo cuando hacemos un filtro de postprocesamiento
+o sí hacemos un shader que utiliza `gl_FragCoord`, si hacemos una captura de
+pantalla o leemos pixeles para procesarlos en la GPU, si dibujamos 2D en un
+canvas, etc. Hay muchos casos donde si usamos `setPixelRatio`nuestro tamaño real será 
+diferente que el tamaño que necesitemos y tendremos que advinar cuando usar
+el tamaño que pidamos y cuando usar el tamaño que three.js este usando.
+Al hacerlo nosotros mismos nos aseguramos de saber el tamaño que se esté usando
+en el momento que lo necesitemos.
+No hay casos especiales donde la mágia suceda tras bambalinas.
+
+Un ejemplo del código se encuentra debajo:
+
 {{{example url="../threejs-responsive-hd-dpi.html" }}}
-It might be hard to see the difference but if you have an HD-DPI
-display and you compare this sample to those above you should
-notice the edges are more crisp.
-This article covered a very basic but fundamental topic. Next up lets quickly
-[go over the basic primitives that three.js provides](threejs-primitives.html).
+
+Podria ser difícil de ver la diferencia a menos que cuentes con un display 
+HD-DPI y comparas estos ejemplos, podrás ver como los bordes son más definidos.
+
+Este artículo trato de cosas básicas, pero fundamentales. Lo siguiente será
+[sobre los primitivos que tiene three.js](threejs-primitives.html).
