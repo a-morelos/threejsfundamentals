@@ -263,5 +263,5 @@ Un ejemplo del código se encuentra debajo:
 Podria ser difícil de ver la diferencia a menos que cuentes con un display 
 HD-DPI y comparas estos ejemplos, podrás ver como los bordes son más definidos.
 
-Este artículo trato de cosas básicas, pero fundamentales. Lo siguiente será
+Este artículo habló sobre cosas básicas, pero fundamentales. Lo siguiente será
 [sobre los primitivos que tiene three.js](threejs-primitives.html).
