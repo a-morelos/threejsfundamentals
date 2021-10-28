@@ -48,26 +48,25 @@ usar <code>TextGeometry</code>.</div>
 <div id="Diagram-EdgesGeometry" data-primitive="EdgesGeometry">Un objeto auxiliar que utiliza otra geometría como fuente y genera bordes sólo si el ángulo entre las caras es más grande que un umbral. Por ejemplo, si miras a la cara desde la cima, muestra una linea que atraviesa cada cara mostrando cada triángulo que forma la caja. Usando <code>EdgesGeometry</code> en vez de esta, las líneas son eliminadas. Ajusta el ángulo del umbral abajo y verás que los bordes desaparecen.</div>
 <div id="Diagram-WireframeGeometry" data-primitive="WireframeGeometry">Genera una geometría que contiene un segmento de línea (2 puntos) por cada borde en la geometría proporcionada. Sin esto es verás como faltan borden o hay algunos de más. Esto es porque WebGL generalmente necesita 2 puntos por segmentos de línea. Por ejemplo, sí tienes un triángulo entonce tienes 3 puntos. Si tratas de dibujarlo usando un material con <code>wireframe: true</code> deberías obtener una línea. Usando la geometría del triángulo con <code>WireframeGeometry</code> creará una nueva geometría con 3 segmentos de línea usando 6 puntos.</div>
 
-We'll go over creating custom geometry in [another article](threejs-custom-buffergeometry.html). For now
-let's make an example creating each type of primitive. We'll start
-with the [examples from the previous article](threejs-responsive.html).
+Seguiremos hablando de crear geometría personalizada en [otro artículo](threejs-custom-buffergeometry.html). Por ahora
+hagamos un ejemplo usando cada tipo de primitivos. Comenzaremos
+con los [ejemplos de los artículos previos](threejs-responsive.html).
 
-Near the top let's set a background color
+Cerca de la parte superior establecemos un color de fondo
 
 ```js
 const scene = new THREE.Scene();
 +scene.background = new THREE.Color(0xAAAAAA);
 ```
 
-This tells three.js to clear to lightish gray.
+Con esto le decimos a three.js que limpie el exceso de luz.
 
-The camera needs to change position so that we can see all the
-objects.
+La cámara necesita cambiar de posición para poder ver los objetos.
 
 ```js
 -const fov = 75;
 +const fov = 40;
-const aspect = 2;  // the canvas default
+const aspect = 2;  // el valor por defecto del canvas
 const near = 0.1;
 -const far = 5;
 +const far = 1000;
@@ -76,8 +75,7 @@ const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 +camera.position.z = 120;
 ```
 
-Let's add a function, `addObject`, that takes an x, y position and an `Object3D` and adds
-the object to the scene.
+Vamos a agregar una función `addObject`, que toma una posición x, y y un `Object3D` y agrega el objeto a la escena.
 
 ```js
 const objects = [];
@@ -92,19 +90,17 @@ function addObject(x, y, obj) {
 }
 ```
 
-Let's also make a function to create a random colored material.
-We'll use a feature of `Color` that lets you set a color
-based on hue, saturation, and luminance.
+También vamos a hacer una fnción que cree un material coloreado de
+forma aleatoria. Usaremos la característica de `Color` que permite 
+establecer un color basado el parámetros como tono, saturación, luminosidad.
 
-`hue` goes from 0 to 1 around the color wheel with
-red at 0, green at .33 and blue at .66. `saturation`
-goes from 0 to 1 with 0 having no color and 1 being
-most saturated. `luminance` goes from 0 to 1
-with 0 being black, 1 being white and 0.5 being
-the maximum amount of color. In other words
-as `luminance` goes from 0.0 to 0.5 the color
-will go from black to `hue`. From 0.5 to 1.0
-the color will go from `hue` to white.
+`hue` (tono) va desde 0 hasta 1 en la rueda de colores con el
+rojo en 0, verde en .33 y azul en .66. `saturation` (saturación)
+va desde 0 hasta 1, siendo 0 sin color y 1 el más saturado.
+`luminance` (lumnisosidad) va desde 0 a 1, con 0 siendo negro,
+1 siendo blanca y 0.5 siendo el monto máximo de color. En otras
+palabras, `luminance` va desde 0.0 a 0.5 el color irá desde el
+negro a `hue`. De 0.5 a 1.0 el color irá desde `hue` al blanco.
 
 ```js
 function createMaterial() {
@@ -121,27 +117,25 @@ function createMaterial() {
 }
 ```
 
-We also passed `side: THREE.DoubleSide` to the material.
-This tells three to draw both sides of the triangles
-that make up a shape. For a solid shape like a sphere
-or a cube there's usually no reason to draw the
-back sides of triangles as they all face inside the
-shape. In our case though we are drawing a few things
-like the `PlaneGeometry` and the `ShapeGeometry`
-which are 2 dimensional and so have no inside. Without
-setting `side: THREE.DoubleSide` they would disappear
-when looking at their back sides.
+También pasamosd `side: THREE.DoubleSide` al material.
+Esto le dice a three que dibujar ambos lados del triángulo
+que forman una figura. Para una figura sólida como una esfera
+o un cubo generalmente no hay motivo para dibujar los lados
+traseros de los triángulos, ya que las mismas se encuentran
+dentro de la figura. En nuestro caso pensamos dibujar cosas
+como el `PlaneGeometry` y `ShapeGeometry` que son en
+2 dimensiones y no tiene lados internos.
+Sin `side: THREE.DoubleSide` desaparecerían cuando los miremos
+por la parte posterior.
 
-I should note that it's faster to draw when **not** setting
-`side: THREE.DoubleSide` so ideally we'd set it only on
-the materials that really need it but in this case we
-are not drawing too much so there isn't much reason to
-worry about it.
+Cabe mencionar que es más rápido de dibujar cuando **evitamos**
+poner `side: THREE.DoubleSide`, así que deberíamos usarlo sólo
+en materiales que realmente lo necesiten, ya que en este caso 
+los dibujos son muy simples, no hay mucho de que preocuparse.
 
-Let's make a function, `addSolidGeometry`, that
-we pass a geometry and it creates a random colored
-material via `createMaterial` and adds it to the scene
-via `addObject`.
+Haremos una función `addSolidGeometry`, que recibe una
+geometría y crea un material coloreado de forma aleatoria
+via `createMaterial` y la agrega a la escena mediante `addObject`.
 
 ```js
 function addSolidGeometry(x, y, geometry) {
@@ -150,8 +144,8 @@ function addSolidGeometry(x, y, geometry) {
 }
 ```
 
-Now we can use this for the majority of the primitives we create.
-For example creating a box
+Podemos usar esto para la mayoría de los primitivos que creamos.
+Por ejemplo para crear una caja:
 
 ```js
 {
@@ -162,86 +156,50 @@ For example creating a box
 }
 ```
 
-If you look in the code below you'll see a similar section for each type of geometry.
+Si miras en el código abajo verás una sección similar para cada tipo de geometría
 
-Here's the result:
+Aquí puedes ver el resultado:
 
 {{{example url="../threejs-primitives.html" }}}
 
-There are a couple of notable exceptions to the pattern above.
-The biggest is probably the `TextGeometry`. It needs to load
-3D font data before it can generate a mesh for the text.
-That data loads asynchronously so we need to wait for it
-to load before trying to create the geometry. By promisifiying 
-font loading we can make it mush easier.
-We create a `FontLoader` and then a function `loadFont` that returns
-a promise that on resolve will give us the font. We then create
-an `async` function called `doit` and load the font using `await`.
-And finally create the geometry and call `addObject` to add it the scene.
+Hay un par de excepciones notables en los patrones de arriba.
+La más grande es probablemente `TextGeometry`. Necesita cargar
+los datos de la fuente 3D antes de poder generar un mesh para el texto.
+Estos datos se cargan de forma asíncrona así que necesitamos esperar
+por ellos antes de poder crear la geometría. La carga de la fuente se
+puede hacer de forma más simple usando `Promise`.
+Creamos un `FontLoader` y una función `loadFont` que regresa una
 
-```js
-{
-  const loader = new THREE.FontLoader();
-  // promisify font loading
-  function loadFont(url) {
-    return new Promise((resolve, reject) => {
-      loader.load(url, resolve, undefined, reject);
-    });
-  }
+promesa que al resolverse nos dará la fuente. Podemos usar una función
+`async` llamada `doit` y cargar la fuente usando `await`.
+Hay otra diferencia. Queremos girar el texto alrededor de su propio
+centro pero three.js por defecto crea el texto con su centro de rotación a
+la izquierda. Para poder hacerlo le pedimos a three.js calcular el encapsulado
+de caja de la geometría. Podemos hacerlo llamando el método `getCenter` del
+encapsulado y pasarlo a la posición del mesh de nuestro objeto.
+Las copias de `getCenter` centran la caja en la posición.
+También regresa la posición del objeto para que podamos usar `multiplyScalar(-1)`
+para posicionar el objeto entero cuyo centro de rotación sea el mismo qu el
+centro del objeto.
 
-  async function doit() {
-    const font = await loadFont('resources/threejs/fonts/helvetiker_regular.typeface.json');  /* threejsfundamentals: url */
-    const geometry = new THREE.TextGeometry('three.js', {
-      font: font,
-      size: 3.0,
-      height: .2,
-      curveSegments: 12,
-      bevelEnabled: true,
-      bevelThickness: 0.15,
-      bevelSize: .3,
-      bevelSegments: 5,
-    });
-    const mesh = new THREE.Mesh(geometry, createMaterial());
-    geometry.computeBoundingBox();
-    geometry.boundingBox.getCenter(mesh.position).multiplyScalar(-1);
+Sí sólo llamamos `addSolidGeometry` como en los ejemplos previos
+establecería las posiciones como al inicio, lo que no es tan
+buena idea. Entonces, para este caso crearemos un objeto `Object3D ` que
+es el nodo estándar para una escena de grafos de three.js `Mesh`
+es heredado de `Object3D`. Entenderemos mejor como funcionan las escenas
+de grafos [en otro artículo](threejs-scenegraph.html).
+Por ahora, es suficiente saber que al igual que los nodos del DOM, los hijos
+son dibujados en relación a sus padres.
+Creando un `Object3D` y haciendo al mesh un hijo de este,
+podemos establecer la posición de `Object3D` donde queramos y todavía
+conservaremos el centro que definimos antes.
 
-    const parent = new THREE.Object3D();
-    parent.add(mesh);
-
-    addObject(-1, -1, parent);
-  }
-  doit();
-}
-```
-
-There's one other difference. We want to spin the text around its
-center but by default three.js creates the text such that its center of rotation
-is on the left edge. To work around this we can ask three.js to compute the bounding
-box of the geometry. We can then call the `getCenter` method
-of the bounding box and pass it our mesh's position object.
-`getCenter` copies the center of the box into the position.
-It also returns the position object so we can call `multiplyScalar(-1)`
-to position the entire object such that its center of rotation
-is at the center of the object.
-
-If we then just called `addSolidGeometry` like with previous
-examples it would set the position again which is
-no good. So, in this case we create an `Object3D` which
-is the standard node for the three.js scene graph. `Mesh`
-is inherited from `Object3D` as well. We'll cover [how the scene graph
-works in another article](threejs-scenegraph.html).
-For now it's enough to know that
-like DOM nodes, children are drawn relative to their parent.
-By making an `Object3D` and making our mesh a child of that
-we can position the `Object3D` wherever we want and still
-keep the center offset we set earlier.
-
-If we didn't do this the text would spin off center.
+Si no hacemos esto el texto no giraría sobre su centro.
 
 {{{example url="../threejs-primitives-text.html" }}}
 
-Notice the one on the left is not spinning around its center
-whereas the one on the right is.
+Nota como la figura de la izquierda no girar sobre si misma
+mientras que la de la derecha si lo hace.
 
 The other exceptions are the 2 line based examples for `EdgesGeometry`
 and `WireframeGeometry`. Instead of calling `addSolidGeometry` they call
